@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CSS test runner</title>
+    <style>
+      iframe { border: 0; margin: 15px; }
+      .hidden { height: 0; width: 0; position: absolute; left: -9999px; }
+    </style>
+  </head>
+  <body>
+    <script>
+      var NUM_RUNS = 500;
+      var iframes = {};
+      var runs = {};
+      var timings = {};
+
+      var preloadTestcases = [
+        '/demos/css/inline-localStorage-cold.html',
+      ];
+
+      preloadTestcases.forEach(function (url) {
+        newIframe(url, {hidden: true});
+      });
+
+      var testcases = [
+        '/demos/css/appcache.html',
+        '/demos/css/import.html',
+        '/demos/css/inline-localStorage-cold.html',
+        '/demos/css/inline-localStorage-warm.html',
+        '/demos/css/inline.html',
+        '/demos/css/link.html',
+        '/demos/css/xhr.html',
+      ];
+
+      function newIframe(url, hidden) {
+        var iframe = document.createElement('iframe');
+        iframe.src = url;
+        if (hidden) {
+          iframe.classList.add('hidden');
+        }
+        document.body.appendChild(iframe);
+        return iframe;
+      }
+
+      // Iframe initialisation.
+      testcases.forEach(function (url) {
+        iframes[url] = newIframe(url);
+        timings[url] = 0;
+        runs[url] = 0;
+      });
+
+      function refreshIframe(url) {
+        // TODO: Fix JS error.
+        iframes[url].src += '';
+      }
+
+      function runComplete(url, time) {
+        timings[url] += time;
+        runs[url] += 1;
+        if (runs[url] < NUM_RUNS) {
+          // Fire off another run if we still have more to do.
+          refreshIframe(url);
+        }
+      }
+
+      // Refresh the iframe.
+      testcases.forEach(function (url) {
+        refreshIframe(url);
+      });
+
+      window.addEventListener('message', function (e) {
+        switch (e.data.type) {
+          case 'cssloaded':
+            runComplete(e.source.window.location.pathname, e.data.data);
+            break;
+        }
+      });
+
+      // TODO: Fire an event when all runs are done!
+
+      // Or include a counter next to each with the live average!
+      function getAverages() {
+        var avgs = {};
+        Object.keys(timings).forEach(function (url) {
+          avgs[url] = timings[url] / runs[url];
+        });
+        return avgs;
+      }
+
+    </script>
+  </body>
+</html>

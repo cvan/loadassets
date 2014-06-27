@@ -13,6 +13,7 @@
       var cssnum = document.styleSheets.length;
     </script>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
     <title>Car Animation Using CSS3</title>
   </head>
   <body>
@@ -63,10 +64,21 @@
       <div class="separator"></div>
     </div>
     <script>
+
+function cssloaded(time) {
+  console.log('CSS loading time: ' + time.toFixed(4) + ' ms');
+  clearInterval(ti);
+  if (window.top !== window) {
+    // If `iframe`d, `postMessage` the result to the parent window.
+    window.top.postMessage({
+      type: 'cssloaded',
+      data: time
+    }, '*');
+  }
+}
       var ti = setInterval(function () {
         if (document.styleSheets.length > cssnum) {
-          console.log('CSS loading time: ' + (window.performance.now() - start_time).toFixed(4) + ' ms');
-          clearInterval(ti);
+          cssloaded(window.performance.now() - start_time);
         }
       });
       var xhr = new XMLHttpRequest();
