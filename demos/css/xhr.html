@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <script>
+      if (!window.performance) {
+        window.performance = {
+          now: function() {
+            return +new Date();
+          }
+        };
+      }
+      var start_time = window.performance.now();
+      var cssnum = document.styleSheets.length;
+    </script>
+    <meta charset="utf-8">
+    <title>Car Animation Using CSS3</title>
+  </head>
+  <body>
+    <div class="top_bg"></div>
+    <div class="side_bg">
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+    </div>
+    <div class="side_bg bot">
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+      <div class="side_bg_black"></div>
+    </div>
+    <div class="road">
+      <div class="divider"></div>
+    </div>
+    <div class="car">
+      <div class="car_top">
+        <div class="window"></div>
+        <div class="window front"></div>
+      </div>
+      <div class="car_bottom"></div>
+      <div class="wheel">
+        <div class="wheel_cap">
+          <div class="wheel_bar"></div>
+        </div>
+      </div>
+      <div class="wheel front">
+        <div class="wheel_cap">
+          <div class="wheel_bar"></div>
+        </div>
+      </div>
+      <div class="separator"></div>
+    </div>
+    <script>
+      var ti = setInterval(function () {
+        if (document.styleSheets.length > cssnum) {
+          console.log('CSS loaded:', window.performance.now() - start_time);
+          clearInterval(ti);
+        }
+      });
+      var xhr = new XMLHttpRequest();
+      xhr.open('get', 'style.css?xhr', true);
+      xhr.onload = function () {
+        var style = document.createElement('style');
+        style.textContent = xhr.responseText;
+        document.querySelector('head').appendChild(style);
+      };
+      xhr.send();
+    </script>
+  </body>
+</html>
