@@ -66,11 +66,12 @@
     <script>
       var ti = setInterval(function () {
         if (document.styleSheets.length > cssnum) {
-          console.log('CSS loaded:', window.performance.now() - start_time);
+          console.log('CSS loading time: ' + (window.performance.now() - start_time).toFixed(4) + ' ms');
           clearInterval(ti);
         }
       });
       document.querySelector('style').textContent = localStorage.la_css;
     </script>
+    <script src="timing.js"></script>
   </body>
 </html>
